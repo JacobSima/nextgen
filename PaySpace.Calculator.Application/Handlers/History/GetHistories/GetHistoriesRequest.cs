@@ -3,7 +3,7 @@
   using System.Collections.Generic;
   using PaySpace.Calculator.Application.Abstractions;
 
-  public class GetHistoryRequest : IAppHandler<IEnumerable<GetHistoryResponse>>
+  public class GetHistoriesRequest : IAppHandler<IEnumerable<GetHistoriesResponse>>
   {
   }
 }

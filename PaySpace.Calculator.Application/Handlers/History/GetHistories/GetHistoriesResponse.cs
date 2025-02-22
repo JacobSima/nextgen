@@ -1,6 +1,6 @@
 ﻿namespace PaySpace.Calculator.Application.Handlers.History.GetHistory
 {
-  public sealed class GetHistoryResponse
+  public sealed class GetHistoriesResponse
   {
     public string PostalCode { get; set; }
 
