@@ -1,20 +1,41 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-
-using PaySpace.Calculator.Data;
-using PaySpace.Calculator.Data.Models;
-using PaySpace.Calculator.Services.Abstractions;
-
-namespace PaySpace.Calculator.Services
+﻿namespace PaySpace.Calculator.Services
 {
-    internal sealed class CalculatorSettingsService(CalculatorContext context, IMemoryCache memoryCache) : ICalculatorSettingsService
+  using Microsoft.EntityFrameworkCore;
+  using Microsoft.Extensions.Caching.Memory;
+
+  using PaySpace.Calculator.Data;
+  using PaySpace.Calculator.Data.Models;
+  using PaySpace.Calculator.Services.Abstractions;
+
+  internal sealed class CalculatorSettingsService(CalculatorContext context, IMemoryCache memoryCache) : ICalculatorSettingsService
+  {
+    public async Task<List<CalculatorSetting>> GetSettingspeAsync()
     {
-        public Task<List<CalculatorSetting>> GetSettingsAsync(CalculatorType calculatorType)
-        {
-            return memoryCache.GetOrCreateAsync($"CalculatorSetting:{calculatorType}", entry =>
-            {
-                return context.Set<CalculatorSetting>().AsNoTracking().Where(_ => _.Calculator == calculatorType).ToListAsync();
-            })!;
-        }
+      var calculatorSettings = await memoryCache.GetOrCreateAsync("CalculatorSetting", entry =>
+      {
+        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+
+        return context.CalculatorSettings
+        .AsNoTracking()
+        .ToListAsync();
+      }) ?? [];
+
+      return calculatorSettings;
     }
+
+    public async Task<List<CalculatorSetting>> GetSettingsByCalculatorTypeAsync(CalculatorType calculatorType)
+    {
+      var calculatorSettings = await memoryCache.GetOrCreateAsync($"CalculatorSetting:{calculatorType}", entry =>
+      {
+        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+
+        return context.CalculatorSettings
+        .AsNoTracking()
+        .Where(calculatorSetting => calculatorSetting.Calculator == calculatorType)
+        .ToListAsync();
+      }) ?? [];
+
+      return calculatorSettings;
+    }
+  }
 }

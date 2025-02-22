@@ -8,7 +8,11 @@
   {
     public void Configure(EntityTypeBuilder<PostalCode> builder)
     {
-      builder.HasData(GetPostalCodes());
+      builder
+        .ToTable("PostalCode");
+
+      builder
+        .HasData(GetPostalCodes());
     }
 
     private static IEnumerable<PostalCode> GetPostalCodes()

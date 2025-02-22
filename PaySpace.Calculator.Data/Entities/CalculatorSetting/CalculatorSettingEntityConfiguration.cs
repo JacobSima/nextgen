@@ -8,7 +8,11 @@
   {
     public void Configure(EntityTypeBuilder<CalculatorSetting> builder)
     {
-      builder.HasData(GetCalculatorSettings());
+      builder
+        .ToTable("CalculatorSetting");
+
+      builder
+        .HasData(GetCalculatorSettings());
     }
 
     internal static IEnumerable<CalculatorSetting> GetCalculatorSettings()
