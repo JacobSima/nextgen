@@ -1,8 +1,8 @@
-﻿using PaySpace.Calculator.Data.Models;
+﻿using PaySpace.Calculator.Data.Entities.CalculatorHistory;
 
 namespace PaySpace.Calculator.Services.Abstractions
 {
-    public interface IHistoryService
+  public interface IHistoryService
     {
         Task<List<CalculatorHistory>> GetHistoryAsync();
 

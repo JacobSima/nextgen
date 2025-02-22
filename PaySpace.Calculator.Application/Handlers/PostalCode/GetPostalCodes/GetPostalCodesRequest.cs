@@ -1,4 +1,4 @@
-﻿namespace PaySpace.Calculator.Application.Handlers.PostalCode.GetPostalCode
+﻿namespace PaySpace.Calculator.Application.Handlers.PostalCode.GetPostalCodes
 {
   using System.Collections.Generic;
   using PaySpace.Calculator.Application.Abstractions;

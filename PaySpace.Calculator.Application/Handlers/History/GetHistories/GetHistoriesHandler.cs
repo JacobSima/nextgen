@@ -1,4 +1,4 @@
-﻿namespace PaySpace.Calculator.Application.Handlers.History.GetHistory
+﻿namespace PaySpace.Calculator.Application.Handlers.History.GetHistories
 {
   using System.Threading.Tasks;
   using MapsterMapper;

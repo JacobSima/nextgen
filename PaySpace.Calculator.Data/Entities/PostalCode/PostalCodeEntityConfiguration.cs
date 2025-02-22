@@ -2,7 +2,7 @@
 {
   using Microsoft.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore.Metadata.Builders;
-  using PaySpace.Calculator.Data.Models;
+  using PaySpace.Calculator.Data.Model;
 
   internal class PostalCodeEntityConfiguration : IEntityTypeConfiguration<PostalCode>
   {

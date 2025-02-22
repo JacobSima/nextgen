@@ -1,8 +1,9 @@
-﻿namespace PaySpace.Calculator.Data.Entities.CalculatorType
+﻿namespace PaySpace.Calculator.Data.Common.CalculatorType
 {
   using Microsoft.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore.Metadata.Builders;
-  using PaySpace.Calculator.Data.Models;
+  using PaySpace.Calculator.Data.Entities.CalculatorSetting;
+  using PaySpace.Calculator.Data.Model;
 
   internal class CalculatorSettingEntityConfiguration : IEntityTypeConfiguration<CalculatorSetting>
   {

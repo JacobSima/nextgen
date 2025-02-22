@@ -1,6 +1,6 @@
 ﻿namespace PaySpace.Calculator.Services.Models
 {
-  using PaySpace.Calculator.Data.Models;
+  using PaySpace.Calculator.Data.Model;
 
   public sealed class CalculateResult
   {

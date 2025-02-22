@@ -1,11 +1,20 @@
-﻿using PaySpace.Calculator.Data.Models;
-
-namespace PaySpace.Calculator.Services.Abstractions
+﻿namespace PaySpace.Calculator.Services.Abstractions
 {
-    public interface IPostalCodeService
-    {
-        Task<List<PostalCode>> GetPostalCodesAsync();
+  using PaySpace.Calculator.Data.Entities.PostalCode;
+  using PaySpace.Calculator.Data.Model;
 
-        Task<CalculatorType?> CalculatorTypeAsync(string code);
-    }
+  public interface IPostalCodeService
+  {
+    Task<List<PostalCode>> GetPostalCodesAsync();
+
+    Task<PostalCode> GetPostalCodeByIdAsync(int postalCodeId);
+
+    Task<PostalCode> AddPostalCodeAsync(PostalCodeServiceRequest newPostalCode);
+
+    Task<bool> UpdatePostalCodeAsync(long? postalCodeId, PostalCodeServiceRequest updatedPostalCode);
+
+    Task<bool> DeletePostalCodeAsync(long postalCodeId);
+
+    Task<CalculatorType> GetCalculatorTypesByCodeAsync(string code);
+  }
 }

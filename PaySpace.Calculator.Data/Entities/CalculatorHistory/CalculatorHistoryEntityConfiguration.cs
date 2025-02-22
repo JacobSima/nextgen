@@ -3,7 +3,6 @@
   using System;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore.Metadata.Builders;
-  using PaySpace.Calculator.Data.Models;
 
   internal class CalculatorHistoryEntityConfiguration : IEntityTypeConfiguration<CalculatorHistory>
   {

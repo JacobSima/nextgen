@@ -1,6 +1,6 @@
-﻿namespace PaySpace.Calculator.Application.Handlers.PostalCode.GetPostalCodes
+﻿namespace PaySpace.Calculator.Application.Handlers.PostalCode.AddPostalCode
 {
-  public class GetPostalCodesResponse
+  public class AddPostalCodeResponse
   {
     public long Id { get; set; }
     public string Code { get; set; }

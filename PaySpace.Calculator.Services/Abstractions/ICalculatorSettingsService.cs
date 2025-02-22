@@ -1,6 +1,7 @@
 ﻿namespace PaySpace.Calculator.Services.Abstractions
 {
-  using PaySpace.Calculator.Data.Models;
+  using PaySpace.Calculator.Data.Entities.CalculatorSetting;
+  using PaySpace.Calculator.Data.Model;
 
   public interface ICalculatorSettingsService
   {

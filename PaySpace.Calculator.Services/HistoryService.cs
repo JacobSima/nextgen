@@ -4,7 +4,7 @@
   using Microsoft.EntityFrameworkCore;
 
   using PaySpace.Calculator.Data;
-  using PaySpace.Calculator.Data.Models;
+  using PaySpace.Calculator.Data.Entities.CalculatorHistory;
   using PaySpace.Calculator.Services.Abstractions;
 
   internal sealed class HistoryService(CalculatorContext context) : IHistoryService
