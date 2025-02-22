@@ -6,11 +6,13 @@
 
   public static class ServiceCollectionExtensions
   {
-    public static void AddDataServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
     {
       services
         .AddDbContext<CalculatorContext>(opt => opt.UseSqlite(configuration.GetConnectionString("CalculatorDatabase")))
         .AddHostedService<DatabaseInitializer>();
+
+      return services;
     }
   }
 }

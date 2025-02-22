@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaySpace.Calculator.API", "PaySpace.Calculator.API\PaySpace.Calculator.API.csproj", "{9D42491E-B527-44B1-A35D-C4A6F7DBF3BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaySpace.Calculator.Data", "PaySpace.Calculator.Data\PaySpace.Calculator.Data.csproj", "{B5F49783-1E4D-44FC-B5D7-231C4A515386}"
@@ -15,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaySpace.Calculator.Tests", "PaySpace.Calculator.Tests\PaySpace.Calculator.Tests.csproj", "{9022D637-762E-464B-995C-9E4DDF78CAAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaySpace.Calculator.Web", "PaySpace.Calculator.Web\PaySpace.Calculator.Web.csproj", "{F9826B33-2CB9-4B8C-B307-FF8328F02558}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaySpace.Calculator.Application", "PaySpace.Calculator.Application\PaySpace.Calculator.Application.csproj", "{9341D733-3E46-477A-BDDF-0FFEA5E612A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +51,13 @@ Global
 		{F9826B33-2CB9-4B8C-B307-FF8328F02558}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9826B33-2CB9-4B8C-B307-FF8328F02558}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9826B33-2CB9-4B8C-B307-FF8328F02558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9341D733-3E46-477A-BDDF-0FFEA5E612A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9341D733-3E46-477A-BDDF-0FFEA5E612A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9341D733-3E46-477A-BDDF-0FFEA5E612A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9341D733-3E46-477A-BDDF-0FFEA5E612A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9D42491E-B527-44B1-A35D-C4A6F7DBF3BA} = {91EF5A17-5D02-4C98-9C30-8ECCF90401B3}
@@ -54,5 +66,6 @@ Global
 		{E3945538-24CD-4A53-9A1A-70B087F42E3C} = {91EF5A17-5D02-4C98-9C30-8ECCF90401B3}
 		{9022D637-762E-464B-995C-9E4DDF78CAAE} = {91EF5A17-5D02-4C98-9C30-8ECCF90401B3}
 		{F9826B33-2CB9-4B8C-B307-FF8328F02558} = {11F8B99C-EB96-4510-92F2-B6D1A74A65AE}
+		{9341D733-3E46-477A-BDDF-0FFEA5E612A6} = {91EF5A17-5D02-4C98-9C30-8ECCF90401B3}
 	EndGlobalSection
 EndGlobal
