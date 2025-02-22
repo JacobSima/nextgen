@@ -8,19 +8,26 @@ namespace PaySpace.Calculator.Web.Controllers
 
   public class CalculatorController(ICalculatorHttpService calculatorHttpService) : Controller
   {
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-      var vm = this.GetCalculatorViewModelAsync();
+      var calculatorViewModel = await this.GetCalculatorViewModelAsync();
 
-      return this.View(vm);
+      return this.View(calculatorViewModel);
+    }
+
+    public async Task<IActionResult> PostalCodeDetails()
+    {
+      var calculatorViewModel = await this.GetCalculatorViewModelAsync();
+
+      return this.View(calculatorViewModel);
     }
 
     public async Task<IActionResult> History()
     {
-      return this.View(new CalculatorHistoryViewModel
-      {
-        CalculatorHistory = await calculatorHttpService.GetHistoryAsync()
-      });
+      var histories = await calculatorHttpService.GetHistoryAsync();
+      var viewHistoryData = new CalculatorHistoryViewModel { CalculatorHistory = histories };
+
+      return this.View(viewHistoryData);
     }
 
     [HttpPost]
@@ -45,21 +52,22 @@ namespace PaySpace.Calculator.Web.Controllers
         }
       }
 
-      var vm = await this.GetCalculatorViewModelAsync(request);
+      var calculatorViewModel = await this.GetCalculatorViewModelAsync(request);
 
-      return this.View(vm);
+      return this.View(calculatorViewModel);
     }
 
     private async Task<CalculatorViewModel> GetCalculatorViewModelAsync(CalculateRequestViewModel? request = null)
     {
       var postalCodes = await calculatorHttpService.GetPostalCodesAsync();
-
-      return new CalculatorViewModel
+      var calculatorViewModel = new CalculatorViewModel
       {
-        PostalCodes = null,
-        Income = request.Income,
-        PostalCode = request.PostalCode ?? string.Empty
+        PostalCodes = postalCodes,
+        Income = request?.Income ?? 0,
+        PostalCode = request?.PostalCode ?? string.Empty
       };
+
+      return calculatorViewModel;
     }
   }
 }
