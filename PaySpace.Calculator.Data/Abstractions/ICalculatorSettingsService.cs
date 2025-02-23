@@ -5,7 +5,7 @@
 
   public interface ICalculatorSettingsService
   {
-    Task<List<CalculatorSetting>> GetSettingspeAsync();
+    Task<List<CalculatorSetting>> GetAllSettingsAsync();
     Task<List<CalculatorSetting>> GetSettingsByCalculatorTypeAsync(CalculatorType calculatorType);
   }
 }

@@ -4,14 +4,13 @@
   using MapsterMapper;
   using PaySpace.Calculator.Application.Abstractions;
   using PaySpace.Calculator.Data.Abstractions;
-  using PaySpace.Calculator.Services.Abstractions;
 
   public class GetCalculatorSettingsHandler(ICalculatorSettingsService calculatorSettingsService, IMapper mapper)
     : IHandler<GetCalculatorSettingsRequest, IEnumerable<GetCalculatorSettingsResponse>>
   {
     public async Task<IEnumerable<GetCalculatorSettingsResponse>> HandleAsync(GetCalculatorSettingsRequest query)
     {
-      var calculatorSettings = await calculatorSettingsService.GetSettingspeAsync();
+      var calculatorSettings = await calculatorSettingsService.GetAllSettingsAsync();
 
       var response = mapper.Map<IEnumerable<GetCalculatorSettingsResponse>>(calculatorSettings);
       return response;
