@@ -19,10 +19,14 @@
       services.AddScoped<IHistoryService, HistoryService>();
       services.AddScoped<ICalculatorSettingsRepository, CalculatorSettingsRepository>();
       services.AddScoped<ICalculatorSettingsService, CalculatorSettingsService>();
+      services.AddScoped<ICalculatorService, CalculatorService>();
+      services.AddScoped<ITaxCalculatorFactory, TaxCalculatorFactory>();
 
-      services.AddScoped<IFlatRateCalculator, FlatRateCalculator>();
-      services.AddScoped<IFlatValueCalculator, FlatValueCalculator>();
-      services.AddScoped<IProgressiveCalculator, ProgressiveCalculator>();
+      services.Scan(scan => scan
+        .FromAssemblyOf<ITaxCalculator>()
+        .AddClasses(classes => classes.AssignableTo<ITaxCalculator>())
+        .AsImplementedInterfaces()
+        .WithScopedLifetime());
 
       // Add In Memory Cache
       services.AddMemoryCache();

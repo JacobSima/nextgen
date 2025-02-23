@@ -1,13 +1,22 @@
-﻿using PaySpace.Calculator.Services.Abstractions;
-using PaySpace.Calculator.Services.Models;
-
-namespace PaySpace.Calculator.Services.Calculators
+﻿namespace PaySpace.Calculator.Services.Calculators
 {
-    internal sealed class ProgressiveCalculator : IProgressiveCalculator
+  using PaySpace.Calculator.Data.Abstractions;
+  using PaySpace.Calculator.Services.Abstractions;
+
+  internal sealed class ProgressiveCalculator(ICalculatorService calculatorService) : IProgressiveCalculator
+  {
+    public async Task<decimal> CalculateTax(decimal annualIncome, int calculatorType)
     {
-        public Task<CalculateResult> CalculateAsync(decimal income)
-        {
-            throw new NotImplementedException();
-        }
+      var settings = await calculatorService.GetCalculatorSettingByCalculatorType(calculatorType);
+
+      if (!settings?.Any() ?? false)
+      {
+        return decimal.Zero;
+      }
+
+      var taxDetails = calculatorService.CalculateTaxDetailsProgressive(settings, annualIncome);
+
+      return taxDetails;
     }
+  }
 }

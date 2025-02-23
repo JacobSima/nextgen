@@ -9,13 +9,15 @@
 
   internal sealed class HistoryRepository(CalculatorContext context) : IHistoryRepository
   {
-    public async Task AddAsync(CalculatorHistory history)
+    public async Task<bool> AddAsync(CalculatorHistory history)
     {
       await context.AddAsync(history);
-      await context.SaveChangesAsync();
+      var addedCount = await context.SaveChangesAsync();
+
+      return addedCount > 0;
     }
 
-    public async Task<List<CalculatorHistory>> GetHistoryAsync()
+    public async Task<List<CalculatorHistory>> GetHistoriesAsync()
     {
       var result = await context.CalculatorHistories
           .OrderByDescending(calculatorHistory => calculatorHistory.Timestamp)

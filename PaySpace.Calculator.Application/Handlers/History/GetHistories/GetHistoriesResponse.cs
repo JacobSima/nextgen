@@ -11,6 +11,6 @@
 
     public decimal Tax { get; set; }
 
-    public long Calculator { get; set; }
+    public string Calculator { get; set; }
   }
 }

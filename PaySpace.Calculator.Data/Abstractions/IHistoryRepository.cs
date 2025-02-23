@@ -4,7 +4,7 @@
 
   public interface IHistoryRepository
   {
-    Task AddAsync(CalculatorHistory history);
-    Task<List<CalculatorHistory>> GetHistoryAsync();
+    Task<bool> AddAsync(CalculatorHistory history);
+    Task<List<CalculatorHistory>> GetHistoriesAsync();
   }
 }

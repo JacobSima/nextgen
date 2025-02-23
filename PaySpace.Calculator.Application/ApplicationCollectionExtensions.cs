@@ -7,11 +7,14 @@
   using Microsoft.Extensions.Hosting;
   using PaySpace.Calculator.Application.Abstractions;
   using PaySpace.Calculator.Services;
+  using PaySpace.Calculator.Services.Configuration;
 
   public static class ApplicationCollectionExtensions
   {
     public static IServiceCollection ApplicationsServices(this IServiceCollection services, IConfiguration configuration)
     {
+      MappingConfig.Configure();
+
       services.AddApiLayer();
 
       // Register Handlers

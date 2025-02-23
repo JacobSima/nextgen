@@ -1,6 +1,7 @@
 ﻿namespace PaySpace.Calculator.Application.Handlers.History.GetHistories
 {
   using System.Threading.Tasks;
+  using Mapster;
   using MapsterMapper;
   using PaySpace.Calculator.Application.Abstractions;
   using PaySpace.Calculator.Data.Abstractions;
@@ -11,7 +12,8 @@
     {
       var histories = await historyService.GetHistoryAsync();
 
-      var response = mapper.Map<IEnumerable<GetHistoriesResponse>>(histories);
+      var response = histories.Adapt<IEnumerable<GetHistoriesResponse>>();
+
       return response;
     }
   }
