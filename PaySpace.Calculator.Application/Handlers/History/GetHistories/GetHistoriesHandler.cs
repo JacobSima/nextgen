@@ -3,7 +3,7 @@
   using System.Threading.Tasks;
   using MapsterMapper;
   using PaySpace.Calculator.Application.Abstractions;
-  using PaySpace.Calculator.Services.Abstractions;
+  using PaySpace.Calculator.Data.Abstractions;
 
   public class GetHistoriesHandler(IHistoryService historyService, IMapper mapper) : IHandler<GetHistoriesRequest, IEnumerable<GetHistoriesResponse>>
   {

@@ -3,6 +3,8 @@
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
+  using PaySpace.Calculator.Data.Abstractions;
+  using PaySpace.Calculator.Data.Helpers;
 
   public static class ServiceCollectionExtensions
   {
@@ -10,7 +12,8 @@
     {
       services
         .AddDbContext<CalculatorContext>(opt => opt.UseSqlite(configuration.GetConnectionString("CalculatorDatabase")))
-        .AddHostedService<DatabaseInitializer>();
+        .AddHostedService<DatabaseInitializer>()
+        .AddSingleton<IInMemoryCache, InMemoryCache>();
 
       return services;
     }

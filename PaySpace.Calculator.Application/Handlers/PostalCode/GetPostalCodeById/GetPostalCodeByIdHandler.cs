@@ -3,7 +3,7 @@
   using System.Threading.Tasks;
   using MapsterMapper;
   using PaySpace.Calculator.Application.Abstractions;
-  using PaySpace.Calculator.Services.Abstractions;
+  using PaySpace.Calculator.Data.Abstractions;
 
   public class GetPostalCodeByIdHandler(IPostalCodeService postalCodeService, IMapper mapper) : IHandler<GetPostalCodeByIdRequest, GetPostalCodeByIdResponse>
   {

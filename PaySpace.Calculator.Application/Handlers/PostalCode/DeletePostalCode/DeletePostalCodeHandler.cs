@@ -2,7 +2,7 @@
 {
   using System.Threading.Tasks;
   using PaySpace.Calculator.Application.Abstractions;
-  using PaySpace.Calculator.Services.Abstractions;
+  using PaySpace.Calculator.Data.Abstractions;
 
   public class DeletePostalCodeHandler(IPostalCodeService postalCodeService) : IHandler<DeletePostalCodeRequest, DeletePostalCodeResponse>
   {

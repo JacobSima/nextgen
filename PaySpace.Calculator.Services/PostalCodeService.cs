@@ -1,56 +1,40 @@
 ﻿namespace PaySpace.Calculator.Services
 {
-  using MapsterMapper;
-  using Microsoft.EntityFrameworkCore;
-  using Microsoft.Extensions.Caching.Memory;
-
-  using PaySpace.Calculator.Data;
+  using PaySpace.Calculator.Data.Abstractions;
   using PaySpace.Calculator.Data.Entities.PostalCode;
   using PaySpace.Calculator.Data.Model;
-  using PaySpace.Calculator.Services.Abstractions;
 
-  internal sealed class PostalCodeService(CalculatorContext context, IMemoryCache memoryCache, IMapper mapper) : IPostalCodeService
+  internal sealed class PostalCodeService(IPostalCodeRepository postalCodeRepository, IInMemoryCache memoryCache) : IPostalCodeService
   {
     public async Task<List<PostalCode>> GetPostalCodesAsync()
     {
-      var postalCodes = await memoryCache.GetOrCreateAsync("PostalCodes", entry =>
-      {
-        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-
-        return context.PostalCodes
-          .AsNoTracking()
-          .ToListAsync();
-      }) ?? [];
+      var postalCodes = await memoryCache.GetOrCreateAsync<List<PostalCode>>("PostalCodes", () => postalCodeRepository.GetAllAsync()) ?? [];
 
       return postalCodes;
     }
 
     public async Task<PostalCode> GetPostalCodeByIdAsync(int postalCodeId)
     {
-      var postalCodes = await memoryCache.GetOrCreateAsync($"PostalCodes:{postalCodeId}", entry =>
-      {
-        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+      var id = long.Parse(postalCodeId.ToString());
 
-        return context.PostalCodes
-          .AsNoTracking()
-          .FirstOrDefaultAsync(postalCode => postalCode.Id == postalCodeId);
-      });
+      var postalCode = await memoryCache.GetOrCreateByIdAsync<PostalCode>(
+        "PostalCodes",
+        code => code.Id == id,
+        () => postalCodeRepository.GetByIdAsync(id)
+      );
 
-      return postalCodes ?? new PostalCode();
+      return postalCode ?? new PostalCode();
     }
 
     public async Task<PostalCode> AddPostalCodeAsync(PostalCodeServiceRequest newPostalCode)
     {
       var request = MapAddPostalCodeRequest(newPostalCode);
 
-      await context.PostalCodes.AddAsync(request);
-      await context.SaveChangesAsync();
-
-      memoryCache.Set($"PostalCodes:{request.Id}", request,
-        new MemoryCacheEntryOptions
-        {
-          AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
-        });
+      var isAddedToCache = await memoryCache.AddAndCacheAsync<PostalCode>(
+        "PostalCodes",
+        () => postalCodeRepository.AddAsync(request),
+        request
+      );
 
       return request;
     }
@@ -70,7 +54,7 @@
 
     public async Task<bool> UpdatePostalCodeAsync(long? postalCodeId, PostalCodeServiceRequest updatedPostalCode)
     {
-      var existingPostalCode = await context.PostalCodes.FindAsync(postalCodeId);
+      var existingPostalCode = await postalCodeRepository.GetByIdAsync(postalCodeId ?? 0);
 
       if (existingPostalCode == null)
       {
@@ -79,35 +63,36 @@
 
       Enum.TryParse<CalculatorType>(updatedPostalCode.Calculator, true, out var calculatorType);
 
-      existingPostalCode.Code = updatedPostalCode.Code;
+      existingPostalCode.Code = updatedPostalCode?.Code ?? string.Empty;
       existingPostalCode.Calculator = calculatorType;
 
-      await context.SaveChangesAsync();
+      var isUpdated = await postalCodeRepository.UpdateAsync(existingPostalCode);
 
-      memoryCache.Set($"PostalCodes:{postalCodeId}", existingPostalCode,
-        new MemoryCacheEntryOptions
-        {
-          AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
-        });
+      if (isUpdated)
+      {
+        memoryCache.UpdateValue<PostalCode>("PostalCodes", code => code.Id == existingPostalCode.Id, existingPostalCode => existingPostalCode);
+      }
 
-      return true;
+      return isUpdated;
     }
 
     public async Task<bool> DeletePostalCodeAsync(long postalCodeId)
     {
-      var existingPostalCode = await context.PostalCodes.FindAsync(postalCodeId);
+      var existingPostalCode = await postalCodeRepository.GetByIdAsync(postalCodeId); ;
 
       if (existingPostalCode == null)
       {
         return false;
       }
 
-      context.PostalCodes.Remove(existingPostalCode);
-      await context.SaveChangesAsync();
+      var isDeleted = await postalCodeRepository.DeleteAsync(existingPostalCode);
 
-      memoryCache.Remove($"PostalCodes:{postalCodeId}");
+      if (isDeleted)
+      {
+        memoryCache.RemoveValue<PostalCode>("PostalCodes", code => code.Id == existingPostalCode.Id);
+      }
 
-      return true;
+      return isDeleted;
     }
 
     public async Task<CalculatorType> GetCalculatorTypesByCodeAsync(string code)
@@ -116,7 +101,7 @@
 
       var postal = postalCodes.FirstOrDefault(postalCode => postalCode.Code == code);
 
-      return postal.Calculator;
+      return postal?.Calculator ?? new CalculatorType();
     }
   }
 }

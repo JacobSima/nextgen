@@ -1,24 +1,21 @@
 ﻿namespace PaySpace.Calculator.Services
 {
-  using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Caching.Memory;
-
-  using PaySpace.Calculator.Data;
+  using PaySpace.Calculator.Data.Abstractions;
   using PaySpace.Calculator.Data.Entities.CalculatorSetting;
   using PaySpace.Calculator.Data.Model;
-  using PaySpace.Calculator.Services.Abstractions;
 
-  internal sealed class CalculatorSettingsService(CalculatorContext context, IMemoryCache memoryCache) : ICalculatorSettingsService
+  internal sealed class CalculatorSettingsService(ICalculatorSettingsRepository calculatorSettingsRepository, IMemoryCache memoryCache) : ICalculatorSettingsService
   {
     public async Task<List<CalculatorSetting>> GetSettingspeAsync()
     {
-      var calculatorSettings = await memoryCache.GetOrCreateAsync("CalculatorSetting", entry =>
+      var calculatorSettings = await memoryCache.GetOrCreateAsync("CalculatorSetting", async entry =>
       {
         entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-        return context.CalculatorSettings
-        .AsNoTracking()
-        .ToListAsync();
+        var settings = await calculatorSettingsRepository.GetCalculatorSettings();
+
+        return settings;
       }) ?? [];
 
       return calculatorSettings;
@@ -26,14 +23,13 @@
 
     public async Task<List<CalculatorSetting>> GetSettingsByCalculatorTypeAsync(CalculatorType calculatorType)
     {
-      var calculatorSettings = await memoryCache.GetOrCreateAsync($"CalculatorSetting:{calculatorType}", entry =>
+      var calculatorSettings = await memoryCache.GetOrCreateAsync($"CalculatorSetting:{calculatorType}", async entry =>
       {
         entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-        return context.CalculatorSettings
-        .AsNoTracking()
-        .Where(calculatorSetting => calculatorSetting.Calculator == calculatorType)
-        .ToListAsync();
+        var types = await calculatorSettingsRepository.GetCalculatorSettingsByType(calculatorType);
+
+        return types;
       }) ?? [];
 
       return calculatorSettings;
