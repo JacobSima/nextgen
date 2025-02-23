@@ -31,31 +31,34 @@ namespace PaySpace.Calculator.Web.Controllers
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken()]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(CalculateRequestViewModel request)
     {
-      if (this.ModelState.IsValid)
+      if (!ModelState.IsValid)
       {
-        try
-        {
-          await calculatorHttpService.CalculateTaxAsync(new CalculateRequest
-          {
-            PostalCode = request.PostalCode,
-            Income = request.Income
-          });
-
-          return this.RedirectToAction(nameof(this.History));
-        }
-        catch (Exception e)
-        {
-          this.ModelState.AddModelError(string.Empty, e.Message);
-        }
+        var calculatorViewModel = await this.GetCalculatorViewModelAsync(request);
+        return View(calculatorViewModel);
       }
 
-      var calculatorViewModel = await this.GetCalculatorViewModelAsync(request);
+      try
+      {
+        await calculatorHttpService.CalculateTaxAsync(new CalculateRequest
+        {
+          PostalCode = request.PostalCode,
+          Income = request.Income
+        });
 
-      return this.View(calculatorViewModel);
+        return RedirectToAction(nameof(History));
+      }
+      catch (Exception e)
+      {
+        ModelState.AddModelError(string.Empty, e.Message);
+      }
+
+      var viewModel = await GetCalculatorViewModelAsync(request);
+      return View(viewModel);
     }
+
 
     private async Task<CalculatorViewModel> GetCalculatorViewModelAsync(CalculateRequestViewModel? request = null)
     {

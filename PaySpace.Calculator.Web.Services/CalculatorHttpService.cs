@@ -9,7 +9,6 @@
   {
     public async Task<List<PostalCode>> GetPostalCodesAsync()
     {
-
       var response = await _httpClient.GetAsync(ApplicationConstants.HttpClients.postalCode);
 
       if (!response.IsSuccessStatusCode)
@@ -24,12 +23,31 @@
 
     public async Task<List<CalculatorHistory>> GetHistoryAsync()
     {
-      throw new NotImplementedException();
+      var response = await _httpClient.GetAsync(ApplicationConstants.HttpClients.history);
+
+      if (!response.IsSuccessStatusCode)
+      {
+        throw new Exception($"Cannot fetch histories, status code: {response.StatusCode}");
+      }
+
+      var data = await response.Content.ReadFromJsonAsync<List<CalculatorHistory>>() ?? [];
+
+      return data;
     }
 
     public async Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest)
     {
-      throw new NotImplementedException();
+      var response = await _httpClient.PostAsJsonAsync(ApplicationConstants.HttpClients.calculator, calculationRequest);
+
+      if (!response.IsSuccessStatusCode)
+      {
+        throw new Exception($"Cannot calculate, status code: {response.StatusCode}");
+      }
+
+      var data = await response.Content.ReadFromJsonAsync<CalculateResult>();
+
+      return data ?? throw new Exception("Failed to deserialize the response.");
     }
+
   }
 }
