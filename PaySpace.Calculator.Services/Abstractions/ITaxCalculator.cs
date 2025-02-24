@@ -2,6 +2,6 @@
 {
   public interface ITaxCalculator
   {
-    Task<decimal> CalculateTax(decimal annualIncome, int calculatorType);
+    decimal CalculateTax(decimal annualIncome, int calculatorType);
   }
 }

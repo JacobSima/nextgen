@@ -17,7 +17,7 @@
       var type = (int)calculatorType;
 
       // Get calculator from TaxCalculator Factory
-      var calculator = calculatorService.GetCalculator(type);
+      var calculator = await calculatorService.GetCalculator(type);
 
       if (calculator == null)
       {
@@ -25,7 +25,7 @@
       }
 
       // Calculate the tax details
-      var taxValue = await calculator.CalculateTax(query.Income, type);
+      var taxValue = calculator.CalculateTax(query.Income, type);
 
       var history = new CalculatorHistory
       {

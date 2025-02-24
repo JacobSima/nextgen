@@ -1,23 +1,36 @@
 ﻿namespace PaySpace.Calculator.Services.Calculators
 {
-  using System.Threading.Tasks;
-  using PaySpace.Calculator.Data.Abstractions;
   using PaySpace.Calculator.Services.Abstractions;
 
-  internal sealed class FlatValueCalculator(ICalculatorService calculatorService) : IFlatValueCalculator
+  internal sealed class FlatValueCalculator(IEnumerable<(decimal, decimal, decimal)> settings) : IFlatValueCalculator
   {
-    public async Task<decimal> CalculateTax(decimal annualIncome, int calculatorType)
+    public decimal CalculateTax(decimal annualIncome, int calculatorType)
     {
-      var settings = await calculatorService.GetCalculatorSettingByCalculatorType(calculatorType);
-
       if (!settings?.Any() ?? false)
       {
         return decimal.Zero;
       }
 
-      var taxDetails = calculatorService.CalculateTaxDetailsFlatValue(settings, annualIncome);
+      var taxDetails = CalculateTaxDetailsFlatValue(settings, annualIncome);
 
       return taxDetails;
+    }
+
+    public decimal CalculateTaxDetailsFlatValue(IEnumerable<(decimal, decimal, decimal)> settings, decimal annualIncome)
+    {
+      var taxValue = 0m;
+
+      foreach (var (from, to, rate) in settings)
+      {
+        if (annualIncome < from || annualIncome > to)
+        {
+          continue;
+        }
+
+        return rate == 10000 ? rate : (annualIncome * rate) / 100;
+      }
+
+      return taxValue;
     }
   }
 }

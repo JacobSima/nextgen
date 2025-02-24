@@ -22,11 +22,9 @@
       services.AddScoped<ICalculatorService, CalculatorService>();
       services.AddScoped<ITaxCalculatorFactory, TaxCalculatorFactory>();
 
-      services.Scan(scan => scan
-        .FromAssemblyOf<ITaxCalculator>()
-        .AddClasses(classes => classes.AssignableTo<ITaxCalculator>())
-        .AsImplementedInterfaces()
-        .WithScopedLifetime());
+      services.AddScoped<IFlatRateCalculator, FlatRateCalculator>();
+      services.AddScoped<IFlatValueCalculator, FlatValueCalculator>();
+      services.AddScoped<IProgressiveCalculator, ProgressiveCalculator>();
 
       // Add In Memory Cache
       services.AddMemoryCache();
