@@ -22,7 +22,7 @@
     @foreach (var history in Model.CalculatorHistory)
     {
       <tr>
-        <th scope="row">@history.Timestamp</th>
+        <th scope="row">@history.Timestamp.ToString("dddd, MMMM dd, yyyy h:mm tt")</th>
         <td>@history.PostalCode</td>
         <td>@history.Income</td>
         <td>@history.Tax</td>
