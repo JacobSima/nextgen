@@ -4,7 +4,7 @@
 
   internal sealed class FlatValueCalculator(IEnumerable<(decimal, decimal, decimal)> settings) : IFlatValueCalculator
   {
-    public decimal CalculateTax(decimal annualIncome, int calculatorType)
+    public decimal CalculateTax(decimal annualIncome)
     {
       if (!settings?.Any() ?? false)
       {

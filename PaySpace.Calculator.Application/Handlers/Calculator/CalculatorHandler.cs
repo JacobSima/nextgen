@@ -25,7 +25,7 @@
       }
 
       // Calculate the tax details
-      var taxValue = calculator.CalculateTax(query.Income, type);
+      var taxValue = calculator.CalculateTax(query.Income);
 
       var history = new CalculatorHistory
       {

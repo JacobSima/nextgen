@@ -2,7 +2,7 @@
 {
   public interface IProgressiveCalculator : ITaxCalculator
   {
-    new decimal CalculateTax(decimal annualIncome, int calculatorType);
+    new decimal CalculateTax(decimal annualIncome);
     decimal CalculateTaxDetailsProgressive(IEnumerable<(decimal, decimal, decimal)> settings, decimal annualIncome);
   }
 }

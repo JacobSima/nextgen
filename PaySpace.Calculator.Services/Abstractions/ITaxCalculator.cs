@@ -2,6 +2,6 @@
 {
   public interface ITaxCalculator
   {
-    decimal CalculateTax(decimal annualIncome, int calculatorType);
+    decimal CalculateTax(decimal annualIncome);
   }
 }

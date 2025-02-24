@@ -4,7 +4,7 @@
 
   internal sealed class ProgressiveCalculator(IEnumerable<(decimal, decimal, decimal)> settings) : IProgressiveCalculator
   {
-    public decimal CalculateTax(decimal annualIncome, int calculatorType)
+    public decimal CalculateTax(decimal annualIncome)
     {
       if (!settings?.Any() ?? false)
       {
