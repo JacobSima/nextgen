@@ -35,6 +35,18 @@
       return data;
     }
 
+    public async Task DeleteHistoryAsync(int historyId)
+    {
+      var url = $"{ApplicationConstants.HttpClients.history}/{historyId}:int";
+
+      var response = await _httpClient.DeleteAsync(url);
+
+      if (!response.IsSuccessStatusCode)
+      {
+        throw new Exception($"Failed to delete history with ID {historyId}, status code: {response.StatusCode}");
+      }
+    }
+
     public async Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest)
     {
       var response = await _httpClient.PostAsJsonAsync(ApplicationConstants.HttpClients.calculator, calculationRequest);

@@ -7,5 +7,6 @@
     Task<List<CalculatorHistory>> GetHistoryAsync();
 
     Task AddAsync(CalculatorHistory calculatorHistory);
+    Task<bool> DeleteHistoryAsync(long historyId);
   }
 }

@@ -24,5 +24,24 @@
 
       return histories;
     }
+
+    public async Task<bool> DeleteHistoryAsync(long historyId)
+    {
+      var existingHistory = await historyRepository.GetByIdAsync(historyId); ;
+
+      if (existingHistory == null)
+      {
+        return false;
+      }
+
+      var isDeleted = await historyRepository.DeleteAsync(existingHistory);
+
+      if (isDeleted)
+      {
+        memoryCache.RemoveValue<CalculatorHistory>("CalculatorHistories", history => history.Id == existingHistory.Id);
+      }
+
+      return isDeleted;
+    }
   }
 }

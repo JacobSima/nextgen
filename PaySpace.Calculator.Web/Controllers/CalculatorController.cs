@@ -59,6 +59,25 @@ namespace PaySpace.Calculator.Web.Controllers
       return View(viewModel);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteHistory(DeleteHistoryRequest deleteHistoryRequest)
+    {
+      try
+      {
+        await calculatorHttpService.DeleteHistoryAsync(deleteHistoryRequest.HistoryId);
+
+        TempData["SuccessMessage"] = "History entry deleted successfully.";
+      }
+      catch (Exception e)
+      {
+        TempData["ErrorMessage"] = $"Error deleting history: {e.Message}";
+      }
+
+      return RedirectToAction(nameof(History));
+    }
+
+
 
     private async Task<CalculatorViewModel> GetCalculatorViewModelAsync(CalculateRequestViewModel? request = null)
     {

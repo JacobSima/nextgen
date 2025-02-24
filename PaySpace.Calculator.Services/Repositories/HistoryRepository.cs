@@ -25,5 +25,21 @@
 
       return result;
     }
+
+    public async Task<CalculatorHistory> GetByIdAsync(long historyId)
+    {
+      var history = await context.CalculatorHistories
+        .AsNoTracking()
+        .FirstOrDefaultAsync(history => history.Id == historyId);
+
+      return history ?? new CalculatorHistory();
+    }
+
+    public async Task<bool> DeleteAsync(CalculatorHistory history)
+    {
+      context.CalculatorHistories.Remove(history);
+      int rowsAffected = await context.SaveChangesAsync();
+      return rowsAffected > 0;
+    }
   }
 }
