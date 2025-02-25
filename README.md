@@ -1,4 +1,4 @@
-﻿## Assessment
+## Assessment
 
 Complete a small full stack solution to do tax calculations using .NET and MVC Razor and do some basic CRUD
 operations on Sqlite using Entity Framework (localdb provided with assignment).
@@ -64,3 +64,49 @@ You have been briefed to complete a tax calculator for an individual. The applic
 **Before submitting your solution, please ensure the following:**
 * Clean your solution to reduce the submitted file size.
 * Do not include the ***bin*** and ***obj*** directories in your submission.
+
+
+
+## Refactoring and Improvements
+
+### Architecture Enhancements
+
+* I refactored the code by applying Clean Architecture principles, introducing a new Application Layer to separate business logic from the API layer. Previously, the API layer contained business logic, so I moved these operations to the Application Layer and refactored the code to include reusable services.
+
+* I implemented the Mediator Pattern using only interfaces, making it easier to resolve API requests and determine which handler should process them.
+
+* I introduced repositories for all services to correctly separate data access from service implementations, ensuring better maintainability and adherence to SOLID principles.
+
+
+### Potential Improvements
+
+* The Services Layer could be renamed to Infrastructure Layer to better reflect its role in the architecture.
+
+* Validation could have been added at multiple levels:
+    * At the API layer to ensure incoming requests meet requirements.
+    * At the Data Access layer using Value Object principles to enforce constraints and consistency.
+
+* Error Handling could be improved by:
+    * Implementing an Exception class to throw specific exceptions when validation fails.
+    * Creating a middleware to handle all exceptions centrally and return meaningful error messages based on exception types.
+
+### Security Considerations
+
+* Due to time constraints, security features were not fully implemented. However, I planned to:
+  * Introduce a User Context for registering and managing users.
+  * Implement Authentication and Authorization within the API to control access.
+
+### Frontend (Web Layer)
+* I used basic Razor Views with a simple UI, focusing on core functionality rather than advanced design.
+
+* Possible improvements:
+  * Implementing CRUD operations for additional services.
+  * Applying authorization to restrict actions based on user roles.
+  * Enhancing the UI with modals to prompt users for confirmation before deleting history records.
+
+### Testing
+
+* My testing approach was minimal. I could have:
+  * Written comprehensive tests for all services.
+  * Verified the Calculator Factory Pattern creation process.
+
