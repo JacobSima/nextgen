@@ -1,3 +1,5 @@
+# TO DO
+
 ## Assessment
 
 Complete a small full stack solution to do tax calculations using .NET and MVC Razor and do some basic CRUD
@@ -66,6 +68,15 @@ You have been briefed to complete a tax calculator for an individual. The applic
 * Do not include the ***bin*** and ***obj*** directories in your submission.
 
 
+# DONE
+
+## How to run the application
+  * Download the Zip file from this repo or clone the repo
+  * Set both the API project in the backend and Web project in the frontend as your start project within your favorite editor.
+  in VS you can select to run multiple start project.
+  * Run the project and the magic will just happen. The project should be able to start.
+  * Use the Swagger for interacting directly with the backend(API)
+  * Use the Web project to interact via the UI.
 
 ## Refactoring and Improvements
 
