@@ -1,26 +1,47 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using PaySpace.Calculator.Data;
-using PaySpace.Calculator.Data.Models;
-using PaySpace.Calculator.Services.Abstractions;
-
-namespace PaySpace.Calculator.Services
+﻿namespace PaySpace.Calculator.Services
 {
-    internal sealed class HistoryService(CalculatorContext context) : IHistoryService
+  using System.Collections.Generic;
+  using PaySpace.Calculator.Data.Abstractions;
+  using PaySpace.Calculator.Data.Entities.CalculatorHistory;
+
+  internal sealed class HistoryService(
+    IHistoryRepository historyRepository,
+    IInMemoryCache memoryCache
+    ) : IHistoryService
+  {
+    public async Task AddAsync(CalculatorHistory history)
     {
-        public async Task AddAsync(CalculatorHistory history)
-        {
-            history.Timestamp = DateTime.Now;
-
-            await context.AddAsync(history);
-            await context.SaveChangesAsync();
-        }
-
-        public Task<List<CalculatorHistory>> GetHistoryAsync()
-        {
-            return context.Set<CalculatorHistory>()
-                .OrderByDescending(_ => _.Timestamp)
-                .ToListAsync();
-        }
+      var isAddedToCache = await memoryCache.AddAndCacheAsync<CalculatorHistory>(
+        "CalculatorHistories",
+        () => historyRepository.AddAsync(history),
+        history
+      );
     }
+
+    public async Task<List<CalculatorHistory>> GetHistoryAsync()
+    {
+      var histories = await memoryCache.GetOrCreateAsync<List<CalculatorHistory>>("CalculatorHistories", () => historyRepository.GetHistoriesAsync()) ?? [];
+
+      return histories;
+    }
+
+    public async Task<bool> DeleteHistoryAsync(long historyId)
+    {
+      var existingHistory = await historyRepository.GetByIdAsync(historyId); ;
+
+      if (existingHistory == null)
+      {
+        return false;
+      }
+
+      var isDeleted = await historyRepository.DeleteAsync(existingHistory);
+
+      if (isDeleted)
+      {
+        memoryCache.RemoveValue<CalculatorHistory>("CalculatorHistories", history => history.Id == existingHistory.Id);
+      }
+
+      return isDeleted;
+    }
+  }
 }

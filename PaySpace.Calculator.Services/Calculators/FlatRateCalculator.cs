@@ -1,13 +1,36 @@
-﻿using PaySpace.Calculator.Services.Abstractions;
-using PaySpace.Calculator.Services.Models;
-
-namespace PaySpace.Calculator.Services.Calculators
+﻿namespace PaySpace.Calculator.Services.Calculators
 {
-    internal sealed class FlatRateCalculator : IFlatRateCalculator
+  using PaySpace.Calculator.Services.Abstractions;
+
+  internal sealed class FlatRateCalculator(IEnumerable<(decimal, decimal, decimal)> settings) : IFlatRateCalculator
+  {
+    public decimal CalculateTax(decimal annualIncome)
     {
-        public Task<CalculateResult> CalculateAsync(decimal income)
-        {
-            throw new NotImplementedException();
-        }
+      if (!settings?.Any() ?? false)
+      {
+        return decimal.Zero;
+      }
+
+      var taxDetails = CalculateTaxDetailsFlatRate(settings, annualIncome);
+
+      return taxDetails;
     }
+
+    public decimal CalculateTaxDetailsFlatRate(IEnumerable<(decimal, decimal, decimal)> settings, decimal annualIncome)
+    {
+      var taxValue = 0m;
+
+      foreach (var (from, to, rate) in settings)
+      {
+        if (annualIncome < from || annualIncome > to)
+        {
+          continue;
+        }
+
+        return (annualIncome * rate) / 100;
+      }
+
+      return taxValue;
+    }
+  }
 }

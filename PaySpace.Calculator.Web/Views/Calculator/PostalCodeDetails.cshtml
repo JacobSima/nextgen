@@ -1,0 +1,35 @@
+@model CalculatorViewModel
+
+@{
+  ViewBag.Title = "Calculator History";
+  Layout = "_Layout";
+  var postalCodes = Model.PostalCodes;
+  var income = Model.Income;
+  var postalCode = Model.PostalCode;
+}
+
+<h2>Postal Codes</h2>
+
+@if(string.IsNullOrWhiteSpace(postalCode) && income == 0)
+{
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Postal Code</th>
+        <th scope="col">Calculator</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var code in postalCodes)
+      {
+        <tr>
+          <td>@code.Code</td>
+          <td>@code.Calculator</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
+<a class="btn btn-secondary" asp-area="" asp-controller="Calculator" asp-action="Index">Back</a>
+

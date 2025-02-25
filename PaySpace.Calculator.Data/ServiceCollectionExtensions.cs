@@ -1,30 +1,21 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace PaySpace.Calculator.Data
+﻿namespace PaySpace.Calculator.Data
 {
-    public static class ServiceCollectionExtensions
+  using Microsoft.EntityFrameworkCore;
+  using Microsoft.Extensions.Configuration;
+  using Microsoft.Extensions.DependencyInjection;
+  using PaySpace.Calculator.Data.Abstractions;
+  using PaySpace.Calculator.Data.Helpers;
+
+  public static class ServiceCollectionExtensions
+  {
+    public static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void AddDataServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddDbContext<CalculatorContext>(opt =>
-                opt.UseSqlite(configuration.GetConnectionString("CalculatorDatabase")));
-        }
+      services
+        .AddDbContext<CalculatorContext>(opt => opt.UseSqlite(configuration.GetConnectionString("CalculatorDatabase")))
+        .AddHostedService<DatabaseInitializer>()
+        .AddSingleton<IInMemoryCache, InMemoryCache>();
 
-        public static void InitializeDatabase(this IApplicationBuilder app)
-        {
-            var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-
-            var context = scope.ServiceProvider.GetRequiredService<CalculatorContext>();
-
-            var pendingMigrations = context.Database.GetPendingMigrations().ToList();
-            if (pendingMigrations.Any())
-            {
-                context.Database.Migrate();
-            }
-        }
+      return services;
     }
+  }
 }

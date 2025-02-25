@@ -400,3 +400,5 @@ FodyWeavers.xsd
 
 # sqlite
 *.sqlite
+*.sqlite-shm
+*.sqlite-wal

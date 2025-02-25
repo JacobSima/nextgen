@@ -1,31 +1,65 @@
-﻿using System.Net.Http.Json;
-
-using PaySpace.Calculator.Web.Services.Abstractions;
-using PaySpace.Calculator.Web.Services.Models;
-
-namespace PaySpace.Calculator.Web.Services
+﻿namespace PaySpace.Calculator.Web.Services
 {
-    public class CalculatorHttpService : ICalculatorHttpService
+  using System.Net.Http;
+  using System.Net.Http.Json;
+  using PaySpace.Calculator.Web.Services.Abstractions;
+  using PaySpace.Calculator.Web.Services.Models;
+
+  public class CalculatorHttpService(HttpClient _httpClient) : ICalculatorHttpService
+  {
+    public async Task<List<PostalCode>> GetPostalCodesAsync()
     {
-        public async Task<List<PostalCode>> GetPostalCodesAsync()
-        {
-            var response = await httpClient.GetAsync("api/posta1code");
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Cannot fetch postal codes, status code: {response.StatusCode}");
-            }
+      var response = await _httpClient.GetAsync(ApplicationConstants.HttpClients.postalCode);
 
-            return await response.Content.ReadFromJsonAsync<List<PostalCode>>() ?? [];
-        }
+      if (!response.IsSuccessStatusCode)
+      {
+        throw new Exception($"Cannot fetch postal codes, status code: {response.StatusCode}");
+      }
 
-        public async Task<List<CalculatorHistory>> GetHistoryAsync()
-        {
-            throw new NotImplementedException();
-        }
+      var data = await response.Content.ReadFromJsonAsync<List<PostalCode>>() ?? [];
 
-        public async Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest)
-        {
-            throw new NotImplementedException();
-        }
+      return data;
     }
+
+    public async Task<List<CalculatorHistory>> GetHistoryAsync()
+    {
+      var response = await _httpClient.GetAsync(ApplicationConstants.HttpClients.history);
+
+      if (!response.IsSuccessStatusCode)
+      {
+        throw new Exception($"Cannot fetch histories, status code: {response.StatusCode}");
+      }
+
+      var data = await response.Content.ReadFromJsonAsync<List<CalculatorHistory>>() ?? [];
+
+      return data;
+    }
+
+    public async Task DeleteHistoryAsync(int historyId)
+    {
+      var url = $"{ApplicationConstants.HttpClients.history}/{historyId}:int";
+
+      var response = await _httpClient.DeleteAsync(url);
+
+      if (!response.IsSuccessStatusCode)
+      {
+        throw new Exception($"Failed to delete history with ID {historyId}, status code: {response.StatusCode}");
+      }
+    }
+
+    public async Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest)
+    {
+      var response = await _httpClient.PostAsJsonAsync(ApplicationConstants.HttpClients.calculator, calculationRequest);
+
+      if (!response.IsSuccessStatusCode)
+      {
+        throw new Exception($"Cannot calculate, status code: {response.StatusCode}");
+      }
+
+      var data = await response.Content.ReadFromJsonAsync<CalculateResult>();
+
+      return data ?? throw new Exception("Failed to deserialize the response.");
+    }
+
+  }
 }

@@ -1,55 +1,23 @@
 ﻿namespace PaySpace.Calculator.API.Controllers
 {
-  using MapsterMapper;
-
   using Microsoft.AspNetCore.Mvc;
-
-  using PaySpace.Calculator.API.Models;
-  using PaySpace.Calculator.Data.Models;
-  using PaySpace.Calculator.Services.Abstractions;
-  using PaySpace.Calculator.Services.Exceptions;
-  using PaySpace.Calculator.Services.Models;
+  using PaySpace.Calculator.Application.Abstractions;
+  using PaySpace.Calculator.Application.Handlers.StaticData;
 
   [ApiController]
   [Route("api/[Controller]")]
   public sealed class CalculatorController(
-        ILogger<CalculatorController> logger,
-        IHistoryService historyService,
-        IMapper mapper)
-        : ControllerBase
+    IHandler<CalculatorRequest, CalculatorResponse> calculatorHandler,
+    ILogger<CalculatorController> logger
+    ) : ControllerBase
   {
-    [HttpPost("calculate-tax")]
-    public async Task<ActionResult<CalculateResult>> Calculate(CalculateRequest request)
+
+    [HttpPost()]
+    public async Task<ActionResult<CalculatorResponse>> Calculator([FromBody] CalculatorRequest calculatorRequest)
     {
-      try
-      {
+      var calculator = await calculatorHandler.HandleAsync(calculatorRequest);
 
-        var result = 0;
-
-        await historyService.AddAsync(new CalculatorHistory
-        {
-          Tax = 0,
-          Calculator = new CalculatorType(),
-          PostalCode = request.PostalCode ?? "Unknown",
-          Income = request.Income
-        });
-
-        return this.Ok(mapper.Map<CalculateResultDto>(result));
-      }
-      catch (CalculatorException e)
-      {
-        logger.LogError(e, e.Message);
-
-        return this.BadRequest(e.Message);
-      }
-    }
-
-    [HttpGet("history")]
-    public async Task<ActionResult<List<CalculatorHistory>>> History()
-    {
-      var history = await historyService.GetHistoryAsync();
-
-      return this.Ok(mapper.Map<List<CalculatorHistoryDto>>(history));
+      return this.Ok(calculator);
     }
   }
 }

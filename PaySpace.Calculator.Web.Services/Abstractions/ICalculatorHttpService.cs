@@ -1,13 +1,14 @@
-﻿using PaySpace.Calculator.Web.Services.Models;
-
-namespace PaySpace.Calculator.Web.Services.Abstractions
+﻿namespace PaySpace.Calculator.Web.Services.Abstractions
 {
-    public interface ICalculatorHttpService
-    {
-        Task<List<PostalCode>> GetPostalCodesAsync();
+  using PaySpace.Calculator.Web.Services.Models;
 
-        Task<List<CalculatorHistory>> GetHistoryAsync();
+  public interface ICalculatorHttpService
+  {
+    Task<List<PostalCode>> GetPostalCodesAsync();
 
-        Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest);
-    }
+    Task<List<CalculatorHistory>> GetHistoryAsync();
+    Task DeleteHistoryAsync(int historyId);
+
+    Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest);
+  }
 }

@@ -1,20 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-
-using PaySpace.Calculator.Data;
-using PaySpace.Calculator.Data.Models;
-using PaySpace.Calculator.Services.Abstractions;
-
-namespace PaySpace.Calculator.Services
+﻿namespace PaySpace.Calculator.Services
 {
-    internal sealed class CalculatorSettingsService(CalculatorContext context, IMemoryCache memoryCache) : ICalculatorSettingsService
+  using PaySpace.Calculator.Data.Abstractions;
+  using PaySpace.Calculator.Data.Entities.CalculatorSetting;
+  using PaySpace.Calculator.Data.Model;
+
+  internal sealed class CalculatorSettingsService(ICalculatorSettingsRepository calculatorSettingsRepository, IInMemoryCache memoryCache) : ICalculatorSettingsService
+  {
+    public async Task<List<CalculatorSetting>> GetAllSettingsAsync()
     {
-        public Task<List<CalculatorSetting>> GetSettingsAsync(CalculatorType calculatorType)
-        {
-            return memoryCache.GetOrCreateAsync($"CalculatorSetting:{calculatorType}", entry =>
-            {
-                return context.Set<CalculatorSetting>().AsNoTracking().Where(_ => _.Calculator == calculatorType).ToListAsync();
-            })!;
-        }
+      var calculatorSettings = await memoryCache.GetOrCreateAsync<List<CalculatorSetting>>("CalculatorSetting", () => calculatorSettingsRepository.GetCalculatorSettings()) ?? [];
+
+      return calculatorSettings;
     }
+
+    public async Task<List<CalculatorSetting>> GetSettingsByCalculatorTypeAsync(CalculatorType calculatorType)
+    {
+      var calculatorSettings = await memoryCache.GetOrCreateByIdAsync<List<CalculatorSetting>>(
+        "CalculatorSetting",
+        calculatorSetting => calculatorSetting.Any(cal => cal.Calculator == calculatorType),
+        () => calculatorSettingsRepository.GetCalculatorSettingsByType(calculatorType)
+       );
+
+      return calculatorSettings;
+    }
+  }
 }

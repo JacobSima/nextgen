@@ -1,32 +1,40 @@
 @model CalculatorHistoryViewModel
 
 @{
-    ViewBag.Title = "Calculator History";
-    Layout = "_Layout";
+  ViewBag.Title = "Calculator History";
+  Layout = "_Layout";
 }
 
 <h2>Tax History</h2>
 
 <table class="table table-striped">
-    <thead>
+  <thead>
     <tr>
-        <th scope="col">Timestamp</th>
-        <th scope="col">Postal Code</th>
-        <th scope="col">Income</th>
-        <th scope="col">Tax</th>
-        <th scope="col">Calculator</th>
+      <th scope="col">Timestamp</th>
+      <th scope="col">Postal Code</th>
+      <th scope="col">Income</th>
+      <th scope="col">Tax</th>
+      <th scope="col">Calculator</th>
+      <th scope="col">Action</th>
     </tr>
-    </thead>
-    <tbody>
-        @foreach (var history in Model.CalculatorHistory)
-        {
-            <tr>
-                <th scope="row">@history.Timestamp</th>
-                <td>@history.PostalCode</td>
-                <td>@history.Income</td>
-                <td>@history.Tax</td>
-                <td>@history.Calculator</td>
-            </tr>
-        }
-    </tbody>
-</table> 
+  </thead>
+  <tbody>
+    @foreach (var history in Model.CalculatorHistory)
+    {
+      <tr>
+        <th scope="row">@history.Timestamp.ToString("dddd, MMMM dd, yyyy h:mm tt")</th>
+        <td>@history.PostalCode</td>
+        <td>@history.Income</td>
+        <td>@history.Tax</td>
+        <td>@history.Calculator</td>
+        <td>
+          <!-- Delete Button -->
+          <form asp-action="DeleteHistory" method="post" style="display:inline;">
+            <input type="hidden" name="historyId" value="@history.Id" />
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
